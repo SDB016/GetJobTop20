@@ -25,7 +25,7 @@ public class searchJob {
 	public static void main(String[] args) throws Exception {		
 		
 		int hrefIdx = 0, rank = 1;
-		int month, day, hour, min;
+		int[] presentTimeArr;
 		String userCategory;
 		String cate_num;
 		Document htmlDoc;
@@ -34,7 +34,7 @@ public class searchJob {
 		Iterator<Element> iter;
 		List<String> href = new ArrayList<>();
 		Set<String> keys;
-		Category<String,String> category = new Category();
+		Category<String,String> category = new Category<>();
 		Calendar calendar = Calendar.getInstance();
 		Site site = new Site();
 		Scanner scanner = new Scanner(System.in);
@@ -48,6 +48,7 @@ public class searchJob {
 			System.out.println("프로그래머스:1\t잡코리아:2");
 			try {
 				int userSite = scanner.nextInt();
+				
 				if(userSite==1) {
 					site = new Programers();
 					category = new pCategory();
@@ -93,14 +94,12 @@ public class searchJob {
 		iter = top20.iterator();
 		
 		//get current time
-		month = calendar.get(Calendar.MONTH)+1;
-		day = calendar.get(Calendar.DATE);
-		hour = calendar.get(Calendar.HOUR);
-		min = calendar.get(Calendar.MINUTE);
+		GetTime getPresentTime = ()->{return new int[]{calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE)};};
+		presentTimeArr = getPresentTime.getTime();
 		
 		//print top 20
 		System.out.println();
-		System.out.println("[ " + userCategory + "직군 " + month + "월 " + day + "일 "+ hour + "시 " + min + "분 "+site.getSiteName()+" 채용소식 ]");
+		System.out.println("[ " + userCategory + "직군 " + presentTimeArr[0] + "월 " + presentTimeArr[1] + "일 "+ presentTimeArr[2] + "시 " + presentTimeArr[3] + "분 "+site.getSiteName()+" 채용소식 ]");
 		System.out.println("=======================================");
 				
 		while(iter.hasNext()) {
@@ -156,6 +155,7 @@ public class searchJob {
 	}
 }
 
+
 class Category<K,V>{
 	protected Set<K> getAllCate(){setHash(); return HASHMAP.keySet();}
 	protected V getCateNum(K category) {setHash(); return HASHMAP.get(category);}
@@ -181,12 +181,12 @@ class pCategory extends Category<String,String>{
 }
 
 
-class Site implements makeURL{
+class Site implements MakeURL{
 	protected String getTop20_Tag() {return top20_tag;}
 	protected String getTop20_hrefTag() {return top20_hrefTag;}
 	protected String getSiteName() {return sitename; }	
+	
 	protected Document getdoc(String cate_num) {
-		
 		//web crawling
 		String url = getURL(cate_num);
 				
@@ -234,4 +234,7 @@ class Programers extends Site{
 
 
 @FunctionalInterface
-interface makeURL {public abstract String getURL(String cate_num);}
+interface MakeURL {public abstract String getURL(String cate_num);}
+
+@FunctionalInterface
+interface GetTime{public int[] getTime();}
