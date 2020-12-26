@@ -22,4 +22,4 @@ Project->properties->java build path->libraries [add external jars… ] After se
 
 
 #This project is for learning about the Java language.
-#Among the grammars used, it is a program created after learning with emphasis on generics, lambdas, collection frameworks, #interfaces, and annotations.
+#Among the grammars used, it is a program created after learning with emphasis on generics, lambdas, collection frameworks, interfaces, and annotations.
